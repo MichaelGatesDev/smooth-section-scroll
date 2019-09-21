@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Scroll Prototype</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' media='screen' href='css/reset.css'>
+        <link rel='stylesheet' type='text/css' media='screen' href='css/style.css'>
+        <script src='main.js'></script>
+    </head>
+
+    <body>
+        <section id="a" next="#b" previous="">
+            <!-- <a href="#" class="previous">Previous Section</a> -->
+            <a href="#" class="next">Next Section</a>
+        </section>
+        <section id="b" next="#c" previous="#a">
+            <a href="#" class="previous">Previous Section</a>
+            <a href="#" class="next">Next Section</a>
+        </section>
+        <section id="c" next="#d" previous="#b">
+            <a href="#" class="previous">Previous Section</a>
+            <a href="#" class="next">Next Section</a>
+        </section>
+        <section id="d" next="#a" previous="#c">
+            <a href="#" class="previous">Previous Section</a>
+            <a href="#" class="next">Back to Top</a>
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            // back to top of page
+            window.scrollTo(0, 0);
+
+            $(document).ready(() => {
+
+                let prevSection = $('section').first().attr('previous');
+                let currentSection = "#" + $('section').first().attr('id');
+                let nextSection = $('section').first().attr('next');
+                // console.log(`Prev: ${prevSection} | Current: ${currentSection} | Next: ${nextSection}`);
+
+                // capture mouse scroll
+                $('body').on('mousewheel DOMMouseScroll', function (e) {
+                    if (typeof e.originalEvent.detail == 'number' && e.originalEvent.detail !== 0) {
+                        if (e.originalEvent.detail > 0) {
+                            onScrollDown();
+                        } else if (e.originalEvent.detail < 0) {
+                            onScrollUp();
+                        }
+                    } else if (typeof e.originalEvent.wheelDelta == 'number') {
+                        if (e.originalEvent.wheelDelta < 0) {
+                            onScrollDown();
+                        } else if (e.originalEvent.wheelDelta > 0) {
+                            onScrollUp();
+                        }
+                    }
+                });
+
+                // capture anchor click
+                $('a.previous').click((event) => {
+                    event.preventDefault();
+                    const { target } = event;
+                    if (target === undefined) return;
+                    const parent = $(target).parent("section");
+                    if (parent === undefined) return;
+                    changeSection(parent.attr('previous'));
+                });
+                $('a.next').click((event) => {
+                    event.preventDefault();
+                    const { target } = event;
+                    if (target === undefined) return;
+                    const parent = $(target).parent("section");
+                    if (parent === undefined) return;
+                    changeSection(parent.attr('next'));
+                });
+
+                changeSection = (elemID) => {
+                    if (elemID === undefined) return;
+                    scrollIntoView(elemID);
+                    update(elemID);
+                };
+
+                update = (setionElementID) => {
+                    prevSection = $(setionElementID).attr('previous');
+                    currentSection = "#" + $(setionElementID).attr('id');
+                    nextSection = $(setionElementID).attr('next');
+                };
+
+                onScrollUp = () => {
+                    if (prevSection === undefined) return;
+                    changeSection(prevSection);
+                }
+                onScrollDown = () => {
+                    if (nextSection === undefined) return;
+                    changeSection(nextSection);
+                }
+
+                scrollIntoView = (elemID, duration = 10) => {
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $(elemID).offset().top
+                    }, duration);
+                }
+            });
+        </script>
+
+    </body>
+
+</html>

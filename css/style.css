@@ -1,0 +1,38 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+section {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+section#a {
+  background-color: palegreen;
+}
+section#b {
+  background-color: paleturquoise;
+}
+section#c {
+  background-color: palevioletred;
+}
+section#d {
+  background-color: palegoldenrod;
+}
+
+.next,
+.previous {
+  font-size: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+}
